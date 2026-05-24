@@ -3,7 +3,7 @@
 ## No1 Create Hash Table from scratch with O(1) runtime
     # implemented put(), get(), delete()
     # rehash() for rehashing when bigger than 70% of cap and smaller than 30% of cap
-    # Havent figured: odd number hash, find better hash function, error in check_size()
+    # TO FIX: odd number hash, find better hash function, error in check_size()
 
 ## No2 In databese, Whats the reasons why using O(log n) Tree is better than using O(1) hash table?
     # 1. While tree's time complexity is stable with O(log n), the hash table could be O(n) due to its collision or hash function.
@@ -20,6 +20,7 @@
 
 ## No4 Implement No3
     # the code is in lru_cache.py
+    # TO FIX: configure with the hash_table.py instead of python dict
 
 
     
