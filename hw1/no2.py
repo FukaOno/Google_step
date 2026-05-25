@@ -21,28 +21,46 @@ def get_score(anagram):
             print("Invalid letter")
     return score
 
+# FIX: 
+    # pre process the dictionary once 
+    # sort with score
+    # order : biggest-> smallest -> biggest score as a match
+
+def build_dictionary_data(dict_file):
+    dict=[]
+
+    with open(dict_file, 'r') as file:
+        for line in file:
+            frequency_line=[0]*26
+            # if the frequency count is smaller than its count of given_string-> anagram
+            line_stripped = line.rstrip('\n')
+            for j in range(len(line_stripped)):
+                frequency_line[ord(line_stripped[j])-ord('a')]+=1
+            
+            score = get_score(line_stripped)
+            dict.append(score, line_stripped, frequency_line)
+    dict.sort(reverse=True)
+    return dict
+
 
 # dictに対して入っているstring をcount
 def find_anagram_with_dictionary_counter(input_file, dict_file):
 
+    dict=build_dictionary_data(dict_file)
+
     with open(input_file, 'r') as input:
         for input_line in input:
-            max_anagram=""
-            max_score = -1
 
             frequency=[0]*26 
-            for l in input_line.rstrip('\n'): 
+            input_word=input_line.rstrip('\n')
+
+            # get the frequency of the word
+            for l in input_word: 
                 frequency[ord(l)-ord('a')]+=1
-
-
-            with open(dict_file, 'r') as file:
-                for line in file:
-                    frequency_line=[0]*26
-                    # if the frequency count is smaller than its count of given_string-> anagram
-                    line_stripped = line.rstrip('\n')
-                    for j in range(len(line_stripped)):
-                        frequency_line[ord(line_stripped[j])-ord('a')]+=1
-                    
+            max_anagram=""
+            
+            # traverse th score
+            for score, line, frequency_line in dict:
                     is_valid=True
                     for i in range(26):
                         if frequency[i]<frequency_line[i]:
@@ -52,12 +70,10 @@ def find_anagram_with_dictionary_counter(input_file, dict_file):
 
                     # if its same or not used in given_string then its okay
                     if is_valid:
-                        score = get_score(line_stripped)
-                        if max_score < score:
-                            max_score = score
-                            max_anagram = line_stripped
-                with open("large_answer.txt", 'a') as file:
-                        file.write(max_anagram+'\n')
+                        max_anagram = line
+                        break
+            with open("large_answer.txt", 'a') as file:
+                    file.write(max_anagram+'\n')
     
     
 
