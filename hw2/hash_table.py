@@ -182,8 +182,31 @@ class HashTable:
             cur = bucket
             while cur:
                 # rehash to new bucket
-                self.put(cur.key, cur.value)
+                self.rehash_insert(cur.key, cur.value)
                 cur=cur.next
+    
+    # Used only in putting elements from old hash table to new hash table
+    # since we dont want to go through check_size() by using put() in rehashing
+
+    # Otherwise, when you create new hash table with 0 item_count
+    # this triggers assertion error dur to item_count >= bucket_size*0.3
+    def rehash_insert(self, key, value):
+        assert type(key) == str
+
+        # no need for checking size, duplicate element
+
+        # calculate the position
+        index = calculate_hash(key)%self.bucket_size
+
+        # add 
+        new_item = Item(key, value, self.buckets[index])
+        self.buckets[index]=new_item
+        self.item_count+=1
+
+
+
+
+
     
 
 

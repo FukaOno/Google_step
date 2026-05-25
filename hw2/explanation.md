@@ -3,7 +3,8 @@
 ## No1 Create Hash Table from scratch with O(1) runtime
     # implemented put(), get(), delete()
     # rehash() for rehashing when bigger than 70% of cap and smaller than 30% of cap
-    # TO FIX: odd number hash, find better hash function, error in check_size()
+    # rehash_insert() to reinsert every elements into new hash table but exclude size check and duplicate check from put()
+    # TO FIX: odd number table size, finding better hash function
 
 ## No2 In databese, Whats the reasons why using O(log n) Tree is better than using O(1) hash table?
     # 1. While tree's time complexity is stable with O(log n), the hash table could be O(n) due to its collision or hash function.
