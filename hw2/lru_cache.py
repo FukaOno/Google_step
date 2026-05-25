@@ -1,3 +1,5 @@
+from hash_table import HashTable
+
 class LinkedListNode:
     def __init__(self, key, value):
         self.key = key
@@ -8,7 +10,7 @@ class LinkedListNode:
 class LRUCache:
     def __init__(self, capacity):
         self.capacity = capacity
-        self.map = {} # hash map for saving the node : value pair-> update to the hash_table.py
+        self.map = HashTable()
         # initialize head -> <= tail
         self.head=LinkedListNode(-1, -1)
         self.tail = LinkedListNode(-1, -1)
@@ -17,21 +19,24 @@ class LRUCache:
     
     
     def put(self, key, value):
-        if key in self.map:
-            old = self.map[key]
-            self.remove(old) # remove from least recently used
+
+        node, found = self.map.get(str(key))
+        if found:
+            self.remove(node) # remove from least recently used
+            self.map.delete(str(key))
 
         # create a new node
-        node = LinkedListNode(key, value)
-        self.map[key]=node
-        self.insert(node) # add to the most recently
+        new = LinkedListNode(key, value)
+        self.map.put(str(key), new)
+        self.insert(new) # add to the most recently
 
         # check if the capacity is available
         # if not available -> evict : remove the least
-        if len(self.map) > self.capacity:
+        if self.map.size() > self.capacity:
             least = self.head.next
             self.remove(least)
-            del self.map[least.key] # delete from hash map 
+            self.map.delete(str(least.key)) # delete from hash map 
+            
     
     def remove(self, node):
         # remove from left (head)-> update the pointer
@@ -48,10 +53,10 @@ class LRUCache:
 
     
     def get(self, key):
-        if key in self.map:
-            # we need to update to most recently accessed
-            node = self.map[key]
-            self.remove(node) # remove from least recent
+         # we need to update to most recently accessed
+        node, found = self.map.get(str(key))
+        if found:
+            self.remove(node) # remove from least recently used
             self.insert(node) # add to the most recent
             return (node.value, True)
         else:
@@ -59,14 +64,14 @@ class LRUCache:
         
     
     def delete(self, key):
-        if key not in self.map:
+        old, found = self.map.get(str(key))
+        if not found:
             return False
         else:
             # delete and update pointer
-            old = self.map[key]
-            del old
-            old.prev.next = old.next
-            old.next.prev=old.prev
+            self.remove(old)
+            self.map.delete(str(key))
+            return True
             
 
         

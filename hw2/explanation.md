@@ -21,7 +21,6 @@
 
 ## No4 Implement No3
     # the code is in lru_cache.py
-    # TO FIX: configure with the hash_table.py instead of python dict
 
 
     
