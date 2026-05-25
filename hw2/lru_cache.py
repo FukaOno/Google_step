@@ -43,7 +43,7 @@ class LRUCache:
         node.prev.next = node.next
         node.next.prev=node.prev
     
-    def insert(self, node):
+    def insert_2_tail(self, node):
         # insert at the right (tail)-> update the pointer
         previous_end = self.tail.prev
         previous_end.next = node # new node as the tail

@@ -17,8 +17,9 @@ def calculate_hash(key):
     assert type(key) == str
     # Note: This is not a good hash function. Make it better!
     hash = 0
-    for i in key:
-        hash += ord(i)
+    for i, ch in enumerate(key):
+        # first char *1 + second char *2 + third char*3 + etc
+        hash +=ord(ch) * (i + 1)
     return hash
 
 
@@ -89,7 +90,7 @@ class HashTable:
 
         if self.item_count >= self.bucket_size*0.7:
             old=self.buckets
-            self.bucket_size*=2
+            self.bucket_size=self.bucket_size*2+1  # add 1 to be odd number
             self.rehash(old)
         return True
 
