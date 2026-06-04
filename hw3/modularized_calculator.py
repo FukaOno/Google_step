@@ -74,21 +74,31 @@ def evaluate_mult_n_divide_first(tokens):
                 index+=1
                 continue
             elif tokens[index - 1]['type'] == 'MULTIPLY':
-                # insert at the same position as the original mult symbol
+                
+                # get two numbers
                 num1=tokens[index-2]['number']
                 num2=tokens[index]['number']
+
+                # multiply
                 ans = num1*num2
+
                 # delete the numbers to multiply and symbol
                 del tokens[index-2:index+1]
+
+                # insert at the same position as the original mult symbol
                 tokens.insert(index-2, {'type': 'NUMBER', 'number': ans})
                 index-=1
 
             elif tokens[index - 1]['type'] == 'DIVIDE':
+
                 num1=tokens[index-2]['number']
                 num2=tokens[index]['number']
+
                 ans = num1/num2
+
                 # delete the numbers to divide and symbol
                 del tokens[index-2:index+1]
+                
                 tokens.insert(index-2, {'type': 'NUMBER', 'number': ans})
                 index-=1
                
