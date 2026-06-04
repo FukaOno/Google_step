@@ -26,7 +26,7 @@
                 return True
         return False
 
-## Compute the equation first-> put into tokens again
+## STEP 5 Compute the equation first-> put into tokens again
 
     # go through and if open parenthesis-> go through until we find close
     # then compute the in-between of parenthesis with 'evaluate()'
@@ -59,6 +59,4 @@
                 
 ## TODO: Raise error when no matching parenthesis
 ## Nested parenthesis
-
-                    
-
+    # since we check the open parenthesis until finding closed parenthesis -> if ((1+2)*3)

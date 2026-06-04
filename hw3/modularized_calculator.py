@@ -41,6 +41,18 @@ def read_closed_parenthesis(line, index):
     token = {'type':'CLOSED_PARENTHESIS'}
     return token, index+1
 
+def read_abs(line, index):
+    token={'type':'ABS'}
+    return token, index+1
+
+def read_int(line, index):
+    token={'token':'INT'}
+    return token, index+1
+
+def read_round(line, index):
+    token={'token':'ROUND'}
+    return token, index+1
+
 
 def tokenize(line):
     tokens = []
@@ -60,6 +72,12 @@ def tokenize(line):
             (token, index) = read_open_parenthesis(line, index)
         elif line[index]==')':
             (token, index) = read_closed_parenthesis(line, index)
+        elif line[index:index+3]=='abs':
+            (token, index) = read_abs(line, index+3)
+        elif line[index:index+3]=='int':
+            (token, index) = read_int(line, index+3)
+        elif line[index:index+5]=='round':
+            (token, index) = read_round(line, index+5)
         else:
             print('Invalid character found: ' + line[index])
             exit(1)
@@ -98,7 +116,7 @@ def evaluate_mult_n_divide_first(tokens):
 
                 # delete the numbers to divide and symbol
                 del tokens[index-2:index+1]
-                
+
                 tokens.insert(index-2, {'type': 'NUMBER', 'number': ans})
                 index-=1
                
@@ -124,7 +142,38 @@ def evaluate_p_first(tokens):
         
         index += 1
     return tokens
-                
+
+def evaluate_abs_int_round_first(tokens):
+    index =0
+    while index < len(tokens):
+        if tokens[index]['type'] == 'ABS':
+            # get the number
+            num = tokens[index+1]['number']
+            ans = abs(num)
+
+            del tokens[index:index+2] # delete the original
+            tokens.insert(index, {'type': 'NUMBER', 'number': ans})
+
+        elif tokens[index]['type']=='INT':
+            # get the number
+            num = tokens[index+1]['number']
+            ans = int(num)
+
+            del tokens[index:index+2] # delete the original
+            tokens.insert(index, {'type': 'NUMBER', 'number': ans})
+        
+        elif tokens[index]['type']=='ROUND':
+            # get the number
+            num = tokens[index+1]['number']
+            ans = round(num)
+
+            del tokens[index:index+2] # delete the original
+            tokens.insert(index, {'type': 'NUMBER', 'number': ans})
+        else:
+            index+=1
+    return tokens
+
+         
 
             
 
@@ -143,6 +192,11 @@ def has_parenthesis(tokens):
             return True
     return False
 
+def has_abs_int_round(tokens):
+    for token in tokens:
+        if token['type'] in ('ABS', 'INT', 'ROUND'):
+            return True
+    return False
 
 def evaluate(tokens):
     answer = 0
@@ -151,6 +205,9 @@ def evaluate(tokens):
 
     if has_parenthesis(tokens):
         tokens = evaluate_p_first(tokens)
+
+    if has_abs_int_round(tokens):
+        tokens=evaluate_abs_int_round_first(tokens)
     
     if has_mult_or_div(tokens):
         tokens=evaluate_mult_n_divide_first(tokens)
