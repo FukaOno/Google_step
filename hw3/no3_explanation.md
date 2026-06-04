@@ -17,7 +17,6 @@
         tokens = evaluate_p_first(tokens)
 
 ## STEP 4 Identify if () in the tokens
-    # traverse the tokens
 
     def has_parenthesis(tokens):
         for token in tokens:
@@ -29,7 +28,8 @@
 
 ## Compute the equation first-> put into tokens again
 
-    # go through and if open parenthesis-> until we find close, then compute the in-between
+    # go through and if open parenthesis-> go through until we find close
+    # then compute the in-between of parenthesis with 'evaluate()'
 
         
     def evaluate_p_first(tokens):
