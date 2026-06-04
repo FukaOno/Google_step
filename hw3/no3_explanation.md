@@ -1,6 +1,6 @@
 ## Modify the program and support ()
 
-# STEP 1 Add parenthesis reader
+## STEP 1 Add parenthesis reader
     def read_parenthesis(line, index):
         token = {'type':'PARENTHESIS'}
         return token, index+1
