@@ -16,7 +16,7 @@
     if has_parenthesis(tokens):
         tokens = evaluate_p_first(tokens)
 
-# STEP 4 Identify if () in the tokens
+## STEP 4 Identify if () in the tokens
     # traverse the tokens
 
     def has_parenthesis(tokens):
@@ -27,7 +27,7 @@
                 return True
         return False
 
-# Compute the equation first-> put into tokens again
+## Compute the equation first-> put into tokens again
 
     # go through and if open parenthesis-> until we find close, then compute the in-between
 
@@ -57,8 +57,8 @@
             index += 1
         return tokens
                 
-# TODO: Raise error when no matching parenthesis
-# Nested parenthesis
+## TODO: Raise error when no matching parenthesis
+## Nested parenthesis
 
                     
 
