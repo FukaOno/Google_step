@@ -46,11 +46,11 @@ def read_abs(line, index):
     return token, index+1
 
 def read_int(line, index):
-    token={'token':'INT'}
+    token={'type':'INT'}
     return token, index+1
 
 def read_round(line, index):
-    token={'token':'ROUND'}
+    token={'type':'ROUND'}
     return token, index+1
 
 
@@ -83,6 +83,7 @@ def tokenize(line):
             exit(1)
         tokens.append(token)
     return tokens
+
 
 def evaluate_mult_n_divide_first(tokens):
     index =1 # starts with 1 so that there is always prev to check 
@@ -126,21 +127,54 @@ def evaluate_mult_n_divide_first(tokens):
         index += 1
     return tokens
 
-
 def evaluate_p_first(tokens):
-    index =1 # starts with 1 so that there is always prev to check 
+    index =0
     while index < len(tokens):
+
+        # ERROR: no matching opne p found
+        if tokens[index]['type'] == 'CLOSED_PARENTHESIS':
+            print('Invalid syntax: no matching ( found')
+            exit(1)
+
+        # open parenthesis then init
         if tokens[index]['type'] == 'OPEN_PARENTHESIS':
             start=index
-            while tokens[index]['type']!='CLOSED_PARENTHESIS':
+            stack=[]
+            index+=1
+                
+            # if open again then we continue push
+            # if closed 
+            while True:
+                if tokens[index]['type']=='OPEN_PARENTHESIS':
+                    stack.append(tokens[index])
+                elif tokens[index]['type']=='CLOSED_PARENTHESIS':
+
+                    # if the stack is empty -> we pop every elements inside of stack
+                    # we found the final closing p
+                    if len(stack)==0:
+                        break
+
+                    # if we still have elements inside of stack-> its inner closed parenthesis
+                    stack.pop()
                 index+=1
+
+                # ERROR : ran out of tokens without finding matching ')'
+                if index >= len(tokens):
+                    print('Invalid syntax: no matching ) found')
+                    exit(1)
             
+            # evaluate the equation in between of '(' and ')'
             ans=evaluate(tokens[start+1:index])
+
+            # delete the original token from '(' to ')'
             del tokens[start:index+1]
+                
+            # insert to the original position 
             tokens.insert(start, {'type': 'NUMBER', 'number': ans})
             index = start
-        
+
         index += 1
+        
     return tokens
 
 def evaluate_abs_int_round_first(tokens):
@@ -175,9 +209,8 @@ def evaluate_abs_int_round_first(tokens):
 
          
 
-            
-
 # if mult and divide in this tokens-> call evaluate_mult_n_divide_first(tokens)
+# looping -> costy
 def has_mult_or_div(tokens):
     for token in tokens:
         if token['type'] in ('MULTIPLY', 'DIVIDE'):
@@ -197,6 +230,7 @@ def has_abs_int_round(tokens):
         if token['type'] in ('ABS', 'INT', 'ROUND'):
             return True
     return False
+
 
 def evaluate(tokens):
     answer = 0
@@ -262,6 +296,12 @@ def run_test():
     test("(3.0+2") # Invalid: No closed
     test(")2.0+1") # Invalid: No Open
     test("((3.0+1.0)*2)") # Nested Parenthesis
+    print("==== Test abs! ====")
+    test("abs(1.0/4-0-(2.0*3+3))")
+    print("==== Test int! ====")
+    test("int(1.0/4-0-(2.0*3+3))")
+    print("==== Test round! ====")
+    test("round(1.0/4-0-(2.0*3+3))")
     print("==== Test finished! ====\n")
 
 run_test()

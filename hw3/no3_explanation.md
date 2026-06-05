@@ -29,20 +29,45 @@
 ## STEP 5 Compute the equation first-> put into tokens again
 
     # go through and if open parenthesis-> go through until we find close
+    # push the equation into the stack
+    # once we found the closed parenthesis -> pop from stack
     # then compute the in-between of parenthesis with 'evaluate()'
 
-        
     def evaluate_p_first(tokens):
-        index =1 # starts with 1 so that there is always prev to check 
+        index =0
         while index < len(tokens):
 
-            # start of equation to do first
+            # ERROR: no matching opne p found
+            if tokens[index]['type'] == 'CLOSED_PARENTHESIS':
+                print('Invalid syntax: no matching ( found')
+                exit(1)
+
+            # open parenthesis then init
             if tokens[index]['type'] == 'OPEN_PARENTHESIS':
                 start=index
+                stack=[]
+                index+=1
+                
+                # if open again then we continue push
+                # if closed 
+                while True:
+                    if tokens[index]['type']=='OPEN_PARENTHESIS':
+                        stack.append(tokens[index])
+                    elif tokens[index]['type']=='CLOSED_PARENTHESIS':
 
-                # until we find closed parenthesis-> move index
-                while tokens[index]['type']!='CLOSED_PARENTHESIS':
+                        # if the stack is empty -> we pop every elements inside of stack
+                        # we found the final closing p
+                        if len(stack)==0:
+                            break
+
+                        # if we still have elements inside of stack-> its inner closed parenthesis
+                        stack.pop()
                     index+=1
+
+                    # ERROR : ran out of tokens without finding matching ')'
+                    if index >= len(tokens):
+                        print('Invalid syntax: no matching ) found')
+                        exit(1)
                 
                 # evaluate the equation in between of '(' and ')'
                 ans=evaluate(tokens[start+1:index])
@@ -56,7 +81,3 @@
             
             index += 1
         return tokens
-                
-## TODO: Raise error when no matching parenthesis
-## Nested parenthesis
-    # since we check the open parenthesis until finding closed parenthesis -> if ((1+2)*3)
