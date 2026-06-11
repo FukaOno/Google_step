@@ -74,18 +74,114 @@ class Wikipedia:
     # 'start': A title of the start page.
     # 'goal': A title of the goal page.
     def find_shortest_path(self, start, goal):
-        #------------------------#
-        # Write your code here!  #
-        #------------------------#
-        pass
+
+        # traverse the self.title and get a new map with title : id
+        ids={}
+        for id, title in self.titles.items():
+            # ids = {title : id }
+            ids[title]=id
+        
+        # get the start id and goal id
+        start_id = ids[start]
+        goal_id = ids[goal]
+
+        # if already reached to goal -> start id = goal id then return the path
+        if start_id==goal_id:
+            return [start_id]
+
+
+        # prepare Queue with node
+        q = collections.deque([start_id])
+
+        # visited nodes : from None
+        seen = {start_id : None}
+
+        # Until Queue is not empty,
+        while len(q) != 0:
+            
+            # dequeue the node
+            node_id = q.popleft()
+
+            # for neighbor of the node just visited,
+            for neighbor_id in self.links[node_id]:
+                if neighbor_id in seen:
+                    continue
+                
+                # if not in seen yet, add the node
+                seen[neighbor_id]=node_id
+
+                # put into queue if not visited yet and not goal yet
+                if neighbor_id != goal_id:
+                    q.append(neighbor_id)
+                else:
+                    # if reached to goal-> return the path 
+                    path=[]
+                    cur=goal_id
+
+                    # we traverse backwards the path came from 
+                    # Until we find the start node which come from node is None
+                    while cur is not None:
+                        path.append(cur)
+                        cur = seen[cur]
+                    
+                    # since we backward tracked so reverse the path
+                    path.reverse()
+                    return path
+        return None
+
+
 
 
     # Homework #2: Calculate the page ranks and print the most popular pages.
     def find_most_popular_pages(self):
-        #------------------------#
-        # Write your code here!  #
-        #------------------------#
-        pass
+        # STEP 1 Initialize all node rank as 1.0
+        pagerank ={}
+        for id in self.titles:
+            pagerank[id]=1.0
+        
+        # STEP 4 Repeat 2&3 until it converges
+        diff = float('inf')
+        iteration = 0 # since it took super long to search, add iteration counter
+        while diff > 0.01 and iteration <100:
+
+            # STEP 2 Distribute the PageRank of each node evenly among its neighboring nodes
+            new_pagerank={}
+            for id in self.titles:
+                new_pagerank[id]=0.0
+            
+            # we need to distribute depending on the number of neighbors this node is connected to so
+            # traverse each node and get distribution
+            # distribution is rank of node / number of neighbors
+            for id in self.titles:
+
+                # skip pages with no outgoing links
+                if len(self.links[id]) == 0:
+                    continue
+
+                # rank of node / number of neighbors
+                distribution= pagerank[id]/ len(self.links[id])
+
+
+                ## STEP 3 Update the node's pagerank to sum of incoming pagerank
+                for distribution_id in self.links[id]:
+                    new_pagerank[distribution_id]+=distribution
+            
+
+            # STEP 4 Repeat 2&3 until it converges
+            # converges when : sum(new_pagerank[i] - old_pagerank[i])**2 < 0.01
+            diff = sum((new_pagerank[i] - pagerank[i]) ** 2 for i in self.titles)
+
+            # new_pagerank map as original pagerank
+            pagerank=new_pagerank
+            iteration+=1
+
+        # STEP 5 Print the top 10
+        # sort with pagerank with id
+        sorted_pages = sorted(pagerank, key=lambda id: pagerank[id], reverse=True)
+
+        # get only the top 10
+        for id in sorted_pages[:10]:
+            print(self.titles[id], pagerank[id])
 
 
     # Homework #3 (optional):
@@ -127,12 +223,12 @@ if __name__ == "__main__":
 
     wikipedia = Wikipedia(sys.argv[1], sys.argv[2])
     # Example
-    wikipedia.find_longest_titles()
-    # Example
-    wikipedia.find_most_linked_pages()
+    # wikipedia.find_longest_titles()
+    # # Example
+    # wikipedia.find_most_linked_pages()
     # Homework #1
-    wikipedia.find_shortest_path("渋谷", "パレートの法則")
+    # wikipedia.find_shortest_path("人工知能", "自然言語処理")
     # Homework #2
     wikipedia.find_most_popular_pages()
     # Homework #3 (optional)
-    wikipedia.find_longest_path("渋谷", "池袋")
+    # wikipedia.find_longest_path("渋谷", "池袋")
