@@ -1,4 +1,4 @@
-# Greedy + 2.0 opt + 2.5 opt
+# Greedy + 2.0 opt + 2.5 opt (extract a single node and insert it somewhere else between two other nodes)
 
 ## solve() Structure
     SOLVE(cities)
@@ -25,3 +25,8 @@
         └─ Update global_best
 
     Return global_best
+
+
+## why do we use Double-Bridge Kick
+    # 2.0 opt + 2.5 opt could lead local optimum—a state where no single node insertion or edge swap can improve the tour, yet it is still not the globally shortest route
+    # To escape, you need to disrupt the tour (a "kick" or perturbation) and start optimizing again

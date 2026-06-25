@@ -135,7 +135,7 @@ def fast_two_opt(cities, tour, neighbor_lists, pos, time_limit, start_time):
                 break
     return tour
 
-# 2.5-opt Node Insertion
+# 2.5-opt : Extract a single node and insert it somewhere else between two other nodes
 def fast_two_dot_five_opt(cities, tour, neighbor_lists, pos, time_limit, start_time):
     n = len(tour)
     improved = True
@@ -172,7 +172,7 @@ def fast_two_dot_five_opt(cities, tour, neighbor_lists, pos, time_limit, start_t
                 
                 # STEP 2 : Calculate Cost of Inserting at this pos
                 next_v = tour[(j + 1) % n]
-                # v-> u->next_v
+                # v-> u-> next_v
                 added_dist = distance(cities[v], cities[u]) + distance(cities[u], cities[next_v])
                 # v-> next_v
                 current_edge_dist = distance(cities[v], cities[next_v])
@@ -238,6 +238,7 @@ def double_bridge_kick(tour, pos):
         pos[city] = idx
     return new_tour
 
+# 2-opt + 2.5-opt 
 def local_search_pipeline(cities, tour, neighbor_lists, time_limit, start_time):
     # Repeat 2-opt and 2.5-opt until no improvements find
     n = len(tour)
