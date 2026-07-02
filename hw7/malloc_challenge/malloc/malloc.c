@@ -213,11 +213,16 @@ void my_free(void *ptr) {
 
     // Check each free block's linked list
     while (curr) {
+
+      // the physical start of that free block (curr) 
+        // aligns perfectly with the physical end of current block (my_tail)
       if ((char *)curr == my_tail) {
         right_neighbor = curr;
         right_neighbor_prev = prev;
         break;
       }
+
+      // otherwise, move to next
       prev = curr;
       curr = curr->next;
     }

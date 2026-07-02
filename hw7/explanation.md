@@ -19,7 +19,7 @@
     # We maintain multiple free lists, where each list only holds free blocks of a specific size range
     # The maximum size is 4000 bytes and everything is a multiple of 8-> Group them tgt
 
-## Steps for Freelist Bin :
+## Steps for Freelist Bin with 4 bins-array:
     # STEP 1 : Define an array of free heads, one for each bin✅
     # STEP 2 : Define helper for a way to look at a size and determine which bin index it belongs to✅
     # STEP 3 : Update functions to match the index instead of global one list✅
@@ -57,6 +57,10 @@
 
 ## Steps for Merge
     # STEP 1 : Calculate the right neighbor's target address✅
+        # Metadata header -> (char *)metadata
+        # The size of tracking header-> sizeof(my_metadata_t)
+        # The size (in bytes) of the usable user allocation payload space -> metadata->size
+
     # STEP 2 : Scan all bins to see if any free block matches our right neighbor's address✅
     # STEP 3 : Isolate the neighbor✅
         # pull it out of its current linked list using my_remove_from_free_list(right_neighbor, right_neighbor_prev). # This prevents the bin's linked list chain from snapping.
